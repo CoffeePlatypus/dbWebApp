@@ -2,15 +2,19 @@ Database Project Web App
 ========================
 
 ##Author##
+
 Julia Froegel
 
 ##Description##
+
 A web app server to provide a GUI interface for my database Project
 
 ##Language##
-java script
+
+javascript
 
 ##Content##
+
 - botwcompendium
      - public
           - images
