@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var db = require('./db').db;
+const sqlite3 = require('sqlite3').verbose();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -7,3 +9,13 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+function findByUsername(username, cb) {
+     let sql = "SELECT * FROM User WHERE Username='"+username+"' LIMIT 1";
+     console.log(sql)
+     db.all(sql, [], (err, rows) => {
+          console.log(rows);
+          cb(err, rows[0]);
+     });
+}
+module.exports.findByUsername = findByUsername;

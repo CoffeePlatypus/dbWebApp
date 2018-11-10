@@ -1,4 +1,4 @@
-#Database Project Web App#
+Database Project Web App
 ========================
 
 ##Author##
@@ -14,13 +14,20 @@ java script
 - botwcompendium
      - public
           - images
+               - sword.jpg
           - javascripts
+               - app.js
           - stylesheets
+               - style.css
           - index.html
      - routes
+          - db.js (looks for Compendium database at "C:\\sqlite\\Compendium.db")
           - index.js
+          - item.js
           - users.js
      - view
      - app.js
      - package-lock.json
      - package.json
+- csv
+     - items.csv (item table of Compendium database backup)

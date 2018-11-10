@@ -1,8 +1,33 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url("../images/sword.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-a {
-  color: #00B7FF;
+.box{
+     margin: 2em;
+     padding: 2em;
+     border-radius: 2em;
+     border: 2px solid black;
+     background:rgba(135, 196, 159, 0.8);
+     color: black;
+}
+
+.box *{
+     color: black;
+}
+
+.log{
+     max-width: 25vw;
+     margin-top: 30vh;
+     margin-left: 4em;
+}
+
+input{
+     max-width: 20vw;
+     min-width: 5em;
+     margin: .5em;
 }

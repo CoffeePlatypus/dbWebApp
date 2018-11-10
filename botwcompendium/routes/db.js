@@ -7,23 +7,6 @@ let db = new sqlite3.Database('C:\\sqlite\\Compendium.db', sqlite3.OPEN_READWRIT
   console.log('Connected to the Compendium database.');
 });
 
-// let sql = `SELECT * FROM Item`;
-// db.all(sql, [], (err, rows) => {
-//      console.log("db callback");
-//
-//
-//      // if (err) {
-//      //      console.log("error");
-//      //      console.log(err);
-//      //      throw err;
-//      // }
-//      rows.forEach((row) => {
-//           console.log(row);
-//      });
-//      // console.log(rows);
-//
-// });
-
 // module.exports = { collection : (name) => db.collection(name) }
 module.exports.db = db;
 

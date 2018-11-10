@@ -2,14 +2,43 @@
 <html>
      <head>
           <title>Compendium</title>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
           <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
           <script src="javascripts/app.js"></script>
           <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous">
     </script>
      </head>
-     <body>
-          <div>temp</div>
-          <button onclick="getItems()"> get Items </button>
+     <body onload=init()>
+
+          <div id="loginview">
+               <div class="box log">
+                    <input class="form-control" type="text" placeholder="Username" id="Username">
+                    <input class="form-control" type="password" placeholder="Password" id="Password">
+                    <button class="btn btn-success" onclick="login()"> login</button>
+               </div>
+          </div>
+
+          <div id="tableview">
+               <div class="box" id="topbar">
+                    <button class="btn btn-success" onclick="getItems()">Items</button>
+                    <button class="btn btn-success" onclick="getGoals()">Goals</button>
+                    <button class="btn btn-success" onclick="getInventory()">Inventory</button>
+                    <button class="btn btn-success" onclick="login()">logout</button>
+               </div>
+               <div class="box">
+                    <table class="table table-hover table-striped" id="displayTable"></table>
+               </div>
+          </div>
+
+          <div id="modalview" class="box">
+               <div class="float-right">
+                    <!-- <button type="button" class="close float-right" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                    </button> -->
+                    <button class="btn btn-danger" onclick="closeModal()"><span aria-hidden="true">&times;</span></button>
+               </div>
+               <table id="modal">
+               </table>
+          </div>
      </body>
 </html>
