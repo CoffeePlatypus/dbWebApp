@@ -12,8 +12,6 @@ const sqlite3 = require('sqlite3').verbose();
 // console.log(rows);
 
 function findItems(query, cb) {
-     console.log("items: "+ query);
-     // let sql = `SELECT * FROM Item`;
      let sql = `SELECT ItemID, ItemName, ItemClass, hp, ItemEffect, SellPrice, DyeColor FROM Item`;
      db.all(sql, [], (err, rows) => {
           cb(err, rows);

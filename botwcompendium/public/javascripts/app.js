@@ -68,7 +68,19 @@ function addToInventory(itemID) {
      });
 }
 
+function getGoals() {
+     $.ajax({
+          url: '/goals/'+ userID,
+          method : 'GET',
+          success : function(response) {
+               console.log(response);
+               showGoals(response);
+          }
+     });
+}
+
 function createGoal(itemID) {
+     console.log("creating goal");
      $.ajax({
           url : '/goals/' + userID + '/' + itemID,
           method : 'POST',
@@ -100,7 +112,7 @@ function showItems(res) {
      $('#displayTable').empty();
      // $('<tr><th colspan=6></th><th><span class="glyphicon glyphicon-search"></span></th>').appendTo('#displayTable');
      $('<tr>'+
-          '<th><span class="glyphicon glyphicon-search"></span></th>'+
+          '<th><button class="btn btn-success" onclick="searchItems()"><i class="material-icons">search</i></button></th>'+
           '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
           '<th><input class="form-control" type="text" placeholder="Class" id="ItemClass"></th>'+
           '<th><input class="form-control" type="number" min="0" max="1000" placeholder="Rupees" id="SellPrice"></th>'+
@@ -119,7 +131,7 @@ function showInventory(res) {
      $('#displayTable').empty();
      // $('<tr><th colspan=6></th><th><span class="glyphicon glyphicon-search"></span></th>').appendTo('#displayTable');
      $('<tr>'+
-          '<th><span class="glyphicon glyphicon-search"></span></th>'+
+          '<th><button class="btn btn-success" onclick="searchInventory()"><i class="material-icons">search</i></button></span></th>'+
           '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
           '<th><input class="form-control" type="text" placeholder="Class" id="ItemClass"></th>'+
           '<th><input class="form-control" type="number" min="0" max="1000" placeholder="Rupees" id="SellPrice"></th>'+
@@ -128,6 +140,20 @@ function showInventory(res) {
      res.forEach( item => {
           console.log(item);
           $('<tr onclick=showItem('+item.ItemID+')><td>'+item.ItemID+'</td><td>'+item.ItemName+'</td><td>'+item.ItemClass+'</td><td>'+item.SellPrice+'</td><td>'+item.Amount+'</td></tr>').appendTo('#displayTable');
+     });
+}
+
+function showGoals(res) {
+     console.log("displaying inentory")
+     $('#displayTable').empty();
+     $('<tr>'+
+          '<th><button class="btn btn-success" onclick="searchGoals()><i class="material-icons">search</i></button></th>'+
+          '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
+          '<th>Target Amount</th>'+
+          '<th>Status</th></tr>').appendTo('#displayTable');
+     res.forEach( item => {
+          console.log(item);
+          $('<tr onclick=showItem('+item.ItemID+')><td>'+item.ItemID+'</td><td>'+item.ItemName+'</td><td>'+item.TargetAmount+'</td><td>'+item.Status+'</td></tr>').appendTo('#displayTable');
      });
 }
 

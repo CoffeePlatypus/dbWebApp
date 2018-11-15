@@ -31,3 +31,7 @@ input{
      min-width: 5em;
      margin: .5em;
 }
+
+hr{
+     color: black;
+}

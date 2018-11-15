@@ -3,7 +3,16 @@ var router = express.Router();
 var item = require('./item');
 var users = require('./users');
 var inventory = require('./inventory');
+var goal = require('./goal');
 
+function sender(res, err, rows) {
+     console.log("sendin");
+     if(err) {
+          console.log(err);
+          res.status( 500 ).send( { 'msg' : err } );
+     }
+     res.send(rows);
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,60 +21,50 @@ router.get('/', function(req, res, next) {
 
 /* GET items */
 router.get('/items', function(req, res, next) {
-     console.log("getting items");
-     item.findItems("", function(err, items){
-          if(err) {
-               console.log(err);
-               res.status( 500 ).send( { 'msg' : 'Error retriving items' } );
-          }
-          res.send(items);
-     });
+     item.findItems("", (err, rows)=>{sender(res, err, rows)});
 });
 
 /* GET item by id in path*/
 router.get('/items/:itemID', function(req, res, next) {
-     console.log("getting item" + req.params.itemID);
-     item.findItemByID(req.params.itemID, function(err, item) {
-          if(err) {
-               console.log(err);
-               res.status( 500 ).send( { 'msg' : 'Error retriving item'} );
-          }
-          res.send(item);
-     });
+     item.findItemByID(req.params.itemID, (err, item)=>{sender(res, err, item)});
 });
 
 /* GET inventory*/
 router.get('/inventory/:userID', function(req, res, next){
-     inventory.getInventory(req.params.userID, "", function(err, rows){
-          if(err) {
-               console.log(err);
-               res.status( 500 ).send( { 'msg' : 'Error retriving item'} );
-          }
-          res.send(rows);
-     });
+     inventory.getInventory(req.params.userID, "", (err, rows)=>{sender(res,err,rows)});
 });
 
 /* POST add items to inventory*/
 router.post('/inventory/:userID/:itemID', function(req, res, next){
-     console.log(req.body.amount);
-     inventory.addInventory(req.params.userID, req.params.itemID, req.body.amount, function(err, rows){
+     inventory.addInventory(req.params.userID, req.params.itemID, req.body.amount, function(err){
           if(err) {
                console.log(err);
                res.status( 500 ).send( { 'msg' : 'Error adding item to inventory'} );
           }
-          res.status(200);
+          res.status(200).send({'msg' : "added Items"});
      });
 });
 
-/* POST create goal */
-router.post('/goals/:username/:itemID', function(req, res, next){
-     console.log("creating goal");
+router.get('/goals/:userID', function(req, res,next) {
+     console.log("getting goals");
+     console.log(req.params.userID);
+     goal.getGoals(req.params.userID, (err, rows)=>{sender(res,err,rows)});
+});
 
+/* POST create goal */
+router.post('/goals/:userID/:itemID', function(req, res, next){
+     console.log("creating goal");
+     goal.createGoal(req.params.userID, req.params.itemID,req.body.amount, (err)=>{
+          if(err) {
+               console.log(err);
+               res.status( 500 ).send( { 'msg' : 'Error adding item to inventory'} );
+          }
+          res.status(200).send({'msg' : "created goal"});
+     });
 });
 
 /* POST log in with username and password in req body*/
 router.post('/login', function(req, res, next) {
-     console.log(req.body);
      users.findByUsername(req.body.Username, function(err,user){
           // console.log(user);
           if(user && user.Password == req.body.Password) {
