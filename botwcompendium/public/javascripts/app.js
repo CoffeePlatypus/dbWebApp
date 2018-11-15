@@ -1,6 +1,6 @@
 view = "loginview";
 previousView = "";
-user = "";
+userID = "";
 
 function init() {
      $('#tableview').hide();
@@ -24,12 +24,12 @@ function closeModal() {
 ////////// AJAX ////////////
 function getItems() {
      $.ajax({
-       url : '/items',
-       method : 'GET',
-       success : function (response) {
-           console.log(response);
-           showItems(response);
-       }
+          url : '/items',
+          method : 'GET',
+          success : function (response) {
+             console.log(response);
+             showItems(response);
+        }
    });
 }
 
@@ -44,6 +44,42 @@ function getItem(itemID,cb) {
    });
 }
 
+function getInventory() {
+     $.ajax({
+          url: '/inventory/'+ userID,
+          method : 'GET',
+          success : function(response) {
+               console.log(response);
+               showInventory(response);
+          }
+     });
+}
+
+function addToInventory(itemID) {
+     console.log($('#addAmount').val());
+     $.ajax({
+          url : '/inventory/' + userID + '/' + itemID,
+          method : 'POST',
+          data : {amount : $('#addAmount').val()},
+          success : function(response) {
+               console.log(response);
+
+          }
+     });
+}
+
+function createGoal(itemID) {
+     $.ajax({
+          url : '/goals/' + userID + '/' + itemID,
+          method : 'POST',
+          data : {amount : $('#goalAmount').val()},
+          success : function(response) {
+               console.log(response);
+
+          }
+     });
+}
+
 function login() {
      $.ajax({
           url : '/login',
@@ -51,7 +87,7 @@ function login() {
           data : {Username : $('#Username').val(), Password : $('#Password').val()},
           success : function(user) {
                console.log(user);
-               user = user.Username;
+               userID = user.Username;
                changeView('tableview');
           }
      });
@@ -64,7 +100,7 @@ function showItems(res) {
      $('#displayTable').empty();
      // $('<tr><th colspan=6></th><th><span class="glyphicon glyphicon-search"></span></th>').appendTo('#displayTable');
      $('<tr>'+
-          '<th>#</th>'+
+          '<th><span class="glyphicon glyphicon-search"></span></th>'+
           '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
           '<th><input class="form-control" type="text" placeholder="Class" id="ItemClass"></th>'+
           '<th><input class="form-control" type="number" min="0" max="1000" placeholder="Rupees" id="SellPrice"></th>'+
@@ -74,8 +110,24 @@ function showItems(res) {
      // $('<tr><th>Number</th><th>Item</th><th>Classification</th><th>Rupees</th><th>Effect</th><th>HP</th><th>Dye</th></tr>').appendTo('#displayTable');
      res.forEach( item => {
           console.log(item);
-          console.log(JSON.stringify(item));
           $('<tr onclick=showItem('+item.ItemID+')><td>'+item.ItemID+'</td><td>'+item.ItemName+'</td><td>'+item.ItemClass+'</td><td>'+item.SellPrice+'</td><td>'+item.ItemEffect+'</td><td>'+item.hp+'</td><td>'+item.DyeColor+'</td></tr>').appendTo('#displayTable');
+     });
+}
+
+function showInventory(res) {
+     console.log("displaying inentory")
+     $('#displayTable').empty();
+     // $('<tr><th colspan=6></th><th><span class="glyphicon glyphicon-search"></span></th>').appendTo('#displayTable');
+     $('<tr>'+
+          '<th><span class="glyphicon glyphicon-search"></span></th>'+
+          '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
+          '<th><input class="form-control" type="text" placeholder="Class" id="ItemClass"></th>'+
+          '<th><input class="form-control" type="number" min="0" max="1000" placeholder="Rupees" id="SellPrice"></th>'+
+          '<th>Amount</th></tr>').appendTo('#displayTable');
+     // $('<tr><th>Number</th><th>Item</th><th>Classification</th><th>Rupees</th><th>Effect</th><th>HP</th><th>Dye</th></tr>').appendTo('#displayTable');
+     res.forEach( item => {
+          console.log(item);
+          $('<tr onclick=showItem('+item.ItemID+')><td>'+item.ItemID+'</td><td>'+item.ItemName+'</td><td>'+item.ItemClass+'</td><td>'+item.SellPrice+'</td><td>'+item.Amount+'</td></tr>').appendTo('#displayTable');
      });
 }
 
@@ -92,5 +144,13 @@ function showItem(itemID) {
           $('<tr><th>Cooking Effect</th><td>' + item.ItemEffect + '</td></tr>').appendTo('#modal');
           $('<tr><th>HP</th><td>' + item.hp + '</td></tr>').appendTo('#modal');
           $('<tr><th>Dye</th><td>' + item.DyeColor + '</td></tr>').appendTo('#modal');
+          $('<tr><th colspan="2"><hr></th></tr>').appendTo('#modal');
+          $('<tr><th colspan="2">Inventory</th></tr>').appendTo('#modal');
+          $('<tr><th>Add to Inventory</th><td><input class="form-control" type="number" min="0" max="1000" placeholder="Add Amount" id="addAmount"></td></tr>').appendTo('#modal');
+          $('<tr><td></td><td><button class="btn btn-success float-right" onclick="addToInventory('+item.ItemID+')">Add</button></td></tr>').appendTo('#modal');
+          $('<tr><th colspan="2"><hr></th></tr>').appendTo('#modal');
+          $('<tr><th colspan="2">Goal</th></tr>').appendTo('#modal');
+          $('<tr><th>Goal Amount</th><td><input class="form-control" type="number" min="0" max="1000" placeholder="Goal Amount" id="goalAmount"></td></tr>').appendTo('#modal');
+          $('<tr><td></td><td><button class="btn btn-success float-right" onclick="createGoal('+item.ItemID+')">Create Goal</button></td></tr>').appendTo('#modal');
      });
 }

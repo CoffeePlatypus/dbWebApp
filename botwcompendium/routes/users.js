@@ -12,9 +12,7 @@ module.exports = router;
 
 function findByUsername(username, cb) {
      let sql = "SELECT * FROM User WHERE Username='"+username+"' LIMIT 1";
-     console.log(sql)
      db.all(sql, [], (err, rows) => {
-          console.log(rows);
           cb(err, rows[0]);
      });
 }

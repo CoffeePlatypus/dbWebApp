@@ -19,7 +19,6 @@ function findItems(query, cb) {
           cb(err, rows);
      });
 }
-
 module.exports.findItems = findItems;
 
 function findItemByID(itemID, cb) {
