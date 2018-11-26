@@ -26,11 +26,33 @@ function getItems() {
      $.ajax({
           url : '/items',
           method : 'GET',
+          data : {query : ""},
           success : function (response) {
              console.log(response);
              showItems(response);
-        }
-   });
+          }
+     });
+}
+
+function searchItems(){
+     query = {  ItemName : $('#ItemName').val(),
+               ItemClass : $('#ItemClass').val(),
+               SellPrice : $('#SellPrice').val(),
+               ItemEffect : $('#ItemEffect').val(),
+               DyeColor : $('#DyeColor').val(),
+               hp : $('#hp').val()};
+     console.log(query);
+     query = JSON.stringify(query);
+     console.log(query)
+     $.ajax({
+          url : '/items',
+          method : 'GET',
+          data : {  query : query },
+          success : function (response) {
+             console.log(response);
+             showItems(response);
+          }
+     });
 }
 
 function getItem(itemID,cb) {
@@ -40,8 +62,30 @@ function getItem(itemID,cb) {
        success : function (response) {
            console.log(response);
            cb(response);
-       }
-   });
+          }
+     });
+}
+
+function getCreatures() {
+     $.ajax({
+          url: '/creatures',
+          method : 'GET',
+          success : function(response) {
+               console.log(response);
+               showCreatures(response);
+          }
+     });
+}
+
+function getCreature(cid, cb) {
+     $.ajax({
+       url : '/creatures/'+cid,
+       method : 'GET',
+       success : function (response) {
+           console.log(response);
+           cb(response);
+          }
+     });
 }
 
 function getInventory() {
@@ -63,7 +107,6 @@ function addToInventory(itemID) {
           data : {amount : $('#addAmount').val()},
           success : function(response) {
                console.log(response);
-
           }
      });
 }
@@ -143,8 +186,48 @@ function showInventory(res) {
      });
 }
 
+function showCreatures(res) {
+     console.log("displaying creatues");
+     $('#displayTable').empty();
+     $('<tr>'+
+          '<th><button class="btn btn-success" onclick="searchCreatures()><i class="material-icons">search</i></button></th>'+
+          '<th><input class="form-control" type="text" placeholder="Creature" id="CreatureName"></th></tr>').appendTo('#displayTable');
+     res.forEach( creature => {
+          console.log(creature);
+          $('<tr onclick=showCreature('+creature.CreatureID+')><td>'+creature.CreatureID+'</td><td>'+creature.CreatureName+'</td></tr>').appendTo('#displayTable');
+     });
+}
+
+function showCreature(id) {
+     getCreature(id, function(creature){
+          console.log("got creature");
+          console.log(creature);
+          changeView("modalview");
+          $('#modal').empty();
+          $('<tr><th>Number</th><td>' + creature.CreatureID + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Creature</th><td>' + creature.CreatureName + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Description</th><td>' + creature.CreatureDescription +'</td></tr>').appendTo('#modal');
+          if(creature.Drops.length != 0 ) {
+               $('<tr><th>Drops</th><td></td></tr>').appendTo('#modal');
+               creature.Drops.forEach(x=>{
+                    $('<tr><th></th><td>'+x+'</td></tr>').appendTo('#modal');
+               });
+          }else{
+               $('<tr><th>Drops</th><td>Nothing</td></tr>').appendTo('#modal');
+          }
+          if(creature.Locations.length != 0) {
+               $('<tr><th>Locations</th><td></td></tr>').appendTo('#modal');
+               creature.Locations.forEach(x=>{
+                    $('<tr><th></th><td>'+x+'</td></tr>').appendTo('#modal');
+               });
+          }else{
+               $('<tr><th>Locations</th><td>Somewhere in Hyrule</td></tr>').appendTo('#modal');
+          }
+     });
+}
+
 function showGoals(res) {
-     console.log("displaying inentory")
+     console.log("displaying inentory");
      $('#displayTable').empty();
      $('<tr>'+
           '<th><button class="btn btn-success" onclick="searchGoals()><i class="material-icons">search</i></button></th>'+
@@ -160,16 +243,21 @@ function showGoals(res) {
 function showItem(itemID) {
      console.log(itemID);
      getItem(itemID, function (item) {
+          console.log(item);
           changeView("modalview");
           $('#modal').empty();
-          $('<tr><th>Number</th><td>' + item.ItemID + '</td></tr>').appendTo('#modal');
-          $('<tr><th>Item</th><td>' + item.ItemName + '</td></tr>').appendTo('#modal');
-          $('<tr><th>Description</th><td>' + item.ItemDescription +'</td></tr>').appendTo('#modal');
-          $('<tr><th>Classification</th><td>' + item.ItemClass + '</td></tr>').appendTo('#modal');
-          $('<tr><th>Rupee Value</th><td>' + item.SellPrice + '</td></tr>').appendTo('#modal');
-          $('<tr><th>Cooking Effect</th><td>' + item.ItemEffect + '</td></tr>').appendTo('#modal');
-          $('<tr><th>HP</th><td>' + item.hp + '</td></tr>').appendTo('#modal');
-          $('<tr><th>Dye</th><td>' + item.DyeColor + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Number</th><td>' + item[0].ItemID + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Item</th><td>' + item[0].ItemName + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Description</th><td>' + item[0].ItemDescription +'</td></tr>').appendTo('#modal');
+          $('<tr><th>Classification</th><td>' + item[0].ItemClass + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Rupee Value</th><td>' + item[0].SellPrice + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Cooking Effect</th><td>' + item[0].ItemEffect + '</td></tr>').appendTo('#modal');
+          $('<tr><th>HP</th><td>' + item[0].hp + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Dye</th><td>' + item[0].DyeColor + '</td></tr>').appendTo('#modal');
+          $('<tr><th>Drops From</th><td></td></tr>').appendTo('#modal');
+          item.forEach(x=>{
+               $('<tr><th></th><td>'+x.CreatureName+'</td></tr>').appendTo('#modal');
+          });
           $('<tr><th colspan="2"><hr></th></tr>').appendTo('#modal');
           $('<tr><th colspan="2">Inventory</th></tr>').appendTo('#modal');
           $('<tr><th>Add to Inventory</th><td><input class="form-control" type="number" min="0" max="1000" placeholder="Add Amount" id="addAmount"></td></tr>').appendTo('#modal');

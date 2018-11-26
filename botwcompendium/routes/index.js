@@ -4,6 +4,7 @@ var item = require('./item');
 var users = require('./users');
 var inventory = require('./inventory');
 var goal = require('./goal');
+var creature = require('./creature');
 
 function sender(res, err, rows) {
      console.log("sendin");
@@ -21,7 +22,21 @@ router.get('/', function(req, res, next) {
 
 /* GET items */
 router.get('/items', function(req, res, next) {
-     item.findItems("", (err, rows)=>{sender(res, err, rows)});
+     query = ""
+     if(req.query.query) {
+          console.log("body!!");
+          query = JSON.parse(req.query.query);
+          console.log(query);
+     }
+     item.findItems(query, (err, rows)=>{sender(res, err, rows)});
+});
+
+router.get('/creatures', function(req,res,next){
+     creature.getCreatures("",(err, rows)=>{sender(res,err,rows)});
+});
+
+router.get('/creatures/:creatureID', function(req,res,next){
+     creature.getCreature(req.params.creatureID, (err, creature)=>{sender(res,err,creature)});
 });
 
 /* GET item by id in path*/

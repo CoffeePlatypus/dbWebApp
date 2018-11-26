@@ -1,5 +1,4 @@
 var db = require('./db').db;
-const sqlite3 = require('sqlite3').verbose();
 
 function getInventory(userID, query, cb) {
      let sql = "SELECT ItemID, ItemName, ItemClass, SellPrice, Amount FROM Item NATURAL JOIN (SELECT ItemID, Amount FROM Inventory WHERE Username = '"+userID+"')";
