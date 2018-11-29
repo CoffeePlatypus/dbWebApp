@@ -25,8 +25,11 @@ Content
                - style.css
           - index.html
      - routes
+          - creature.js
           - db.js (looks for Compendium database at "C:\\sqlite\\Compendium.db")
+          - goal.js
           - index.js
+          - inventory.js
           - item.js
           - users.js
      - view

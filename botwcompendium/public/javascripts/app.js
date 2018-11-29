@@ -88,6 +88,20 @@ function getCreature(cid, cb) {
      });
 }
 
+function searchCreatures() {
+     console.log("searching creatures");
+     console.log($('#CreatureName').val());
+     $.ajax({
+          url: '/creatures',
+          data: {query : $('#CreatureName').val()},
+          method : 'GET',
+          success : function(response) {
+               // console.log(response);
+               showCreatures(response);
+          }
+     });
+}
+
 function getInventory() {
      $.ajax({
           url: '/inventory/'+ userID,
@@ -173,12 +187,7 @@ function showInventory(res) {
      console.log("displaying inentory")
      $('#displayTable').empty();
      // $('<tr><th colspan=6></th><th><span class="glyphicon glyphicon-search"></span></th>').appendTo('#displayTable');
-     $('<tr>'+
-          '<th><button class="btn btn-success" onclick="searchInventory()"><i class="material-icons">search</i></button></span></th>'+
-          '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
-          '<th><input class="form-control" type="text" placeholder="Class" id="ItemClass"></th>'+
-          '<th><input class="form-control" type="number" min="0" max="1000" placeholder="Rupees" id="SellPrice"></th>'+
-          '<th>Amount</th></tr>').appendTo('#displayTable');
+     $('<tr><th></th><th>Item</th><th>Class</th><th>Rupees</th><th>Amount</th></tr>').appendTo('#displayTable');
      // $('<tr><th>Number</th><th>Item</th><th>Classification</th><th>Rupees</th><th>Effect</th><th>HP</th><th>Dye</th></tr>').appendTo('#displayTable');
      res.forEach( item => {
           console.log(item);
@@ -190,10 +199,10 @@ function showCreatures(res) {
      console.log("displaying creatues");
      $('#displayTable').empty();
      $('<tr>'+
-          '<th><button class="btn btn-success" onclick="searchCreatures()><i class="material-icons">search</i></button></th>'+
+          '<th><button class="btn btn-success" onclick="searchCreatures()"><i class="material-icons">search</i></button></th>'+
           '<th><input class="form-control" type="text" placeholder="Creature" id="CreatureName"></th></tr>').appendTo('#displayTable');
      res.forEach( creature => {
-          console.log(creature);
+          // console.log(creature);
           $('<tr onclick=showCreature('+creature.CreatureID+')><td>'+creature.CreatureID+'</td><td>'+creature.CreatureName+'</td></tr>').appendTo('#displayTable');
      });
 }
@@ -229,11 +238,7 @@ function showCreature(id) {
 function showGoals(res) {
      console.log("displaying inentory");
      $('#displayTable').empty();
-     $('<tr>'+
-          '<th><button class="btn btn-success" onclick="searchGoals()><i class="material-icons">search</i></button></th>'+
-          '<th><input class="form-control" type="text" placeholder="Item" id="ItemName"></th>'+
-          '<th>Target Amount</th>'+
-          '<th>Status</th></tr>').appendTo('#displayTable');
+     $('<tr><th></th><th>Item</th><th>Target Amount</th><th>Status (amt remaining or completed)</th></tr>').appendTo('#displayTable');
      res.forEach( item => {
           console.log(item);
           $('<tr onclick=showItem('+item.ItemID+')><td>'+item.ItemID+'</td><td>'+item.ItemName+'</td><td>'+item.TargetAmount+'</td><td>'+item.Status+'</td></tr>').appendTo('#displayTable');

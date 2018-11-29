@@ -7,7 +7,6 @@ var goal = require('./goal');
 var creature = require('./creature');
 
 function sender(res, err, rows) {
-     console.log("sendin");
      if(err) {
           console.log(err);
           res.status( 500 ).send( { 'msg' : err } );
@@ -32,7 +31,11 @@ router.get('/items', function(req, res, next) {
 });
 
 router.get('/creatures', function(req,res,next){
-     creature.getCreatures("",(err, rows)=>{sender(res,err,rows)});
+     var query = "";
+     if (req.query.query) {
+          query = req.query.query
+     }
+     creature.getCreatures(query,(err, rows)=>{sender(res,err,rows)});
 });
 
 router.get('/creatures/:creatureID', function(req,res,next){
@@ -61,14 +64,11 @@ router.post('/inventory/:userID/:itemID', function(req, res, next){
 });
 
 router.get('/goals/:userID', function(req, res,next) {
-     console.log("getting goals");
-     console.log(req.params.userID);
      goal.getGoals(req.params.userID, (err, rows)=>{sender(res,err,rows)});
 });
 
 /* POST create goal */
 router.post('/goals/:userID/:itemID', function(req, res, next){
-     console.log("creating goal");
      goal.createGoal(req.params.userID, req.params.itemID,req.body.amount, (err)=>{
           if(err) {
                console.log(err);

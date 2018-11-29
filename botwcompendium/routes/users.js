@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var db = require('./db').db;
-const sqlite3 = require('sqlite3').verbose();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {

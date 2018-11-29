@@ -1,8 +1,7 @@
 var db = require('./db').db;
 
 function getCreatures(query, cb) {
-     let sql = "SELECT * FROM Creature";
-     console.log(sql);
+     let sql = "SELECT * FROM Creature WHERE CreatureName LIKE '%"+query+"%'";
      db.all(sql, [], (err, rows) =>{
           cb(err, rows);
      });
@@ -11,7 +10,6 @@ module.exports.getCreatures = getCreatures;
 
 function getCreature(id, cb) {
      let sql = "SELECT CreatureID, CreatureName, CreatureDescription, ItemName, LocationName FROM Creature LEFT NATURAL JOIN CreatureLocation LEFT NATURAL JOIN (SELECT ItemName, CreatureID FROM Item NATURAL JOIN CreatureDrops WHERE CreatureID = "+id+") WHERE CreatureID = "+id;
-     console.log(sql);
      db.all(sql, [], (err, rows) =>{
           var creature = {};
           creature.CreatureID = rows[0].CreatureID;
@@ -35,7 +33,6 @@ function getCreature(id, cb) {
                });
           }
           creature.Drops = items;
-          console.log(creature);
           cb(err, creature);
      });
 }

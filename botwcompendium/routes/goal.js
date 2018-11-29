@@ -1,9 +1,7 @@
 var db = require('./db').db;
 
 function getGoals(username, cb) {
-     console.log("got to get goals");
      let sql = "SELECT GoalID, ItemID, ItemName, TargetAmount, (TargetAmount - Amount) AS Status FROM ((SELECT * From Goal WHERE Username = '"+username+"') NATURAL JOIN (SELECT ItemID, ItemName FROM Item)) LEFT NATURAL JOIN Inventory";
-     console.log(sql);
      db.all(sql, [], (err, rows) => {
           rows.forEach(x=>{
                console.log(x);
@@ -13,7 +11,6 @@ function getGoals(username, cb) {
                     x.Status = "completed";
                }
           });
-          console.log()
           cb(err, rows);
      });
 }

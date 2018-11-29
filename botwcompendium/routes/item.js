@@ -1,16 +1,6 @@
 var db = require('./db').db;
 const sqlite3 = require('sqlite3').verbose();
 
-// if (err) {
-//      console.log("error");
-//      console.log(err);
-//      throw err;
-// }
-// rows.forEach((row) => {
-//      console.log(row);
-// });
-// console.log(rows);
-
 function processQuery(queryObj) {
      console.log("query obj: "+queryObj);
      if(queryObj.ItemName || queryObj.ItemClass || queryObj.SellPrice || queryObj.ItemEffect || queryObj.hp || queryObj.DyeColor) {
@@ -44,7 +34,7 @@ function findItems(query, cb) {
      let sql = `SELECT ItemID, ItemName, ItemClass, hp, ItemEffect, SellPrice, DyeColor FROM Item`;
      if(query) {
           query = processQuery(query);
-          console.log(query)
+          // console.log(query)
           sql += query;
      }
      console.log(sql);
@@ -55,7 +45,6 @@ function findItems(query, cb) {
 module.exports.findItems = findItems;
 
 function findItemByID(itemID, cb) {
-     console.log(itemID);
      let sql = 'SELECT * FROM Item JOIN (SELECT CreatureName FROM CreatureDrops NATURAL JOIN Creature WHERE ItemID = '+itemID+') WHERE ItemID = '+itemID;
      db.all(sql, [], (err, rows) => {
           cb(err, rows);

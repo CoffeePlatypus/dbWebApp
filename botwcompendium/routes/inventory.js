@@ -10,7 +10,6 @@ module.exports.getInventory = getInventory;
 
 function addInventory(userID, itemID, amount, cb) {
      let sql = "SELECT InventoryID, Amount FROM Inventory WHERE Username = '"+userID+"' AND ItemID = "+itemID;
-     console.log(sql);
      db.all(sql, [], (err, rows) =>{
           if(err) {
                cb(err);
